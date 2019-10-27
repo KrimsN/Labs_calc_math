@@ -1,4 +1,5 @@
 import numpy as np
+from math import sqrt
 
 def PLU_decomposition(A) -> (np.ndarray, np.ndarray, np.ndarray):
     """
@@ -34,7 +35,7 @@ def PLU_decomposition(A) -> (np.ndarray, np.ndarray, np.ndarray):
 
 
 
-def Solve_SLE(A: np.ndarray, b: np.ndarray) -> (np.ndarray, np.ndarray, np.ndarray, float) :
+def Solve(A: np.ndarray, b: np.ndarray) -> (np.ndarray, np.ndarray, np.ndarray, float) :
     '''
     Решение СЛАУ методом PLU-декомпозиции
     '''
@@ -66,7 +67,13 @@ def Solve_SLE(A: np.ndarray, b: np.ndarray) -> (np.ndarray, np.ndarray, np.ndarr
     R = A.dot(X) - b #Вектор невязки
     #print('r:\t',R)
     NR_r = R.max()
-    return X, Y, R, NR_r
+
+    NR_e = 0.0
+    for e in np.nditer(R):
+        NR_e += e**2
+    NR_e = sqrt(NR_e)
+
+    return X, Y, R, NR_r, NR_e
 
 def determinant(A) -> float:
     '''
@@ -109,6 +116,9 @@ def inverse(A) -> np.ndarray:
 
     for i in range(X__):
         a[i] = np.array([1. if j == i else 0.  for j in range(X__) ])
-        res[i], y[i], _, _  = Solve_SLE(A,a[i]) #TODO 
+        res[i], y[i], _, _, _  = Solve(A,a[i]) #TODO 
+    res = res.transpose()
+    
+    R = A.dot(res) - np.identity(A.shape[0])
          
-    return res.transpose(), y
+    return res, y, R
