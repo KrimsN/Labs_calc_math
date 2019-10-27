@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.linalg
+from pprint import pprint
 
 def PLU_dec(A) -> (np.ndarray, np.ndarray, np.ndarray):
     """
@@ -34,7 +35,7 @@ def PLU_dec(A) -> (np.ndarray, np.ndarray, np.ndarray):
     return P, L, U
 
 
-def Solve_SLE(A: np.ndarray, b: np.ndarray) -> np.ndarray :
+def Solve_SLE(A: np.ndarray, b: np.ndarray) -> (np.ndarray, np.ndarray, np.ndarray, float) :
     '''
     Решение СЛАУ методом PLU-декомпозиции
     '''
@@ -43,7 +44,7 @@ def Solve_SLE(A: np.ndarray, b: np.ndarray) -> np.ndarray :
     #Ly = Pb
     Pb = P.dot(b)
     Y = np.zeros(Pb.shape)
-    print('Pb:\t', Pb)
+    #print('Pb:\t', Pb)
 
     for i in range(len(Pb)):
         sum = 0.
@@ -51,7 +52,7 @@ def Solve_SLE(A: np.ndarray, b: np.ndarray) -> np.ndarray :
             sum += Y[j] * L[i][j]
         Y[i] = Pb[i] - sum
 
-    print('Y:\t',Y)
+    #print('Y:\t',Y)
 
     #Ux = Y
     X = np.zeros(Y.shape, dtype="float64")
@@ -62,10 +63,11 @@ def Solve_SLE(A: np.ndarray, b: np.ndarray) -> np.ndarray :
         X[i] = (Y[i] - sum) / U[i,i]
 
     X = X.transpose()
-    print('X:\t', X)
-    R = A.dot(X) - b
-    print('r:\t',R)
-    return X
+    #print('X:\t', X)
+    R = A.dot(X) - b #Вектор невязки
+    #print('r:\t',R)
+    NR_r = R.max()
+    return X, Y, R, NR_r
 
 def det_PLU(A) -> float:
     '''
@@ -103,24 +105,49 @@ def inverse(A) -> np.ndarray:
     '''
     X__ = A.shape[0]
 
-    a = [None] * X__
+    a =  y = [None] * X__
     res = np.zeros([X__, X__])
 
     for i in range(X__):
         a[i] = np.array([1. if j == i else 0.  for j in range(X__) ])
-        res[i] = Solve_SLE(A,a[i])
+        res[i], y[i], _, _  = Solve_SLE(A,a[i]) #TODO 
          
-    return res.transpose()
+    return res.transpose(), y
 
 
 if __name__ == "__main__":
 
     myA = [[20.9, 1.2, 2.1, 0.9], [1.2, 21.2, 1.5, 2.5],[2.1, 1.5, 19.8, 1.3], [0.9, 2.5, 1.3, 32.1]]
     myB = [21.7, 27.46, 28.76, 49.72]
+    myA = [
+    [ 1.0, -2.0,  3.0,  -4.0],
+    [ 3.0,  3.0, -5.0,  -1.0],
+    [ 3.0,  0.0,  3.0, -10.0],
+    [-2.0,  1.0,  2.0,  -3.0]
+    ]
+    
+    myB = [
+        2.0,
+        -3.0,
+        8.0,
+        5.0
+    ]
+
 
     b = np.array(myB)
     A = np.array(myA)
     print('\n\ndet_PLU: ',det_PLU(A))
+    #print('\n\ndet: ',scipy.linalg.det(A))
+
     print('\nMy\n')
-    Solve_SLE(A, b)
-    print('inverse:\n',inverse(A))
+    X, Y, R, NR = Solve_SLE(A, b)
+    print('x* = ', X)
+    print('y = ', Y)
+    print('r = ', R)
+    print('||r|| = ', NR)
+
+    
+    X , Y = inverse(A)
+    print('inverse:\n',X)
+    for y in Y:
+        print(f'yi : {y}')
