@@ -1,7 +1,9 @@
 import numpy as np
 from typing import TextIO
 
-def check():
+def check(n:int):
+    
+
     return False
 
 def read(input_file: TextIO, SLE:bool):
@@ -13,8 +15,8 @@ def read(input_file: TextIO, SLE:bool):
     A = np.ndarray((n, n))
     if SLE:
         b = np.ndarray(n)
-        if check():
-            raise ValueError("Не правильно введена матрица")
+        #if check(n):
+        #    raise ValueError("Не правильно введена матрица")
     else:
         pass
 
