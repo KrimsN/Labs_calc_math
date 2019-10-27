@@ -6,6 +6,7 @@ import argparse
 from Accurate_methods.LU_decomposition import Solve as Solve_LU, inverse as inv, determinant as det
 import Iterative_methods.seidel as Sei
 
+from myIO import reader, writer
 
 
 
@@ -63,13 +64,15 @@ if __name__ == "__main__":
     [ 3.0,  0.0,  3.0, -10.0],
     [-2.0,  1.0,  2.0,  -3.0]
     ]
+    myA = read[0]
+    myB = read[1]
     
-    myB = [
-        2.0,
-        -3.0,
-        8.0,
-        5.0
-    ]
+    # myB = [
+    #     2.0,
+    #     -3.0,
+    #     8.0,
+    #     5.0
+    # ]
 
 
     b = np.array(myB)
@@ -84,6 +87,7 @@ if __name__ == "__main__":
     print('y = ', Y)
     print('r = ', R)
     print(f'||r|| = {NR} or {NR_e}')
+    writer.write(X, R, NR)
 
     X , Y, NR = inv(A) # нахождение обратной матрицы и 
     print('inverse:\n',X)
