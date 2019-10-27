@@ -22,16 +22,14 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--output', action="store", default='output.txt')
     args = parser.parse_args()
 
+    in_f = open(args.input, 'w')
 
-
-    #print(args)
-
-    """
+    
     if args.solve:
-        A , b = reader(args.input, SLE=True)
+        A , b = reader.read(in_f, SLE=True)
     else:
-        A = reader(args.input, SLE=False)
-    """
+        A = reader.read(in_f, SLE=False)
+    
 
     if args.method == 'LU':
         if args.solve:
@@ -64,8 +62,7 @@ if __name__ == "__main__":
     [ 3.0,  0.0,  3.0, -10.0],
     [-2.0,  1.0,  2.0,  -3.0]
     ]
-    myA = read[0]
-    myB = read[1]
+    
     
     # myB = [
     #     2.0,
@@ -98,5 +95,5 @@ if __name__ == "__main__":
     for i in range(len(Y)):
         print(f'y{i} : {Y[i]}')
 
-
+    in_f.close()
 
