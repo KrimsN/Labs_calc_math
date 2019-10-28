@@ -15,10 +15,7 @@ def read(input_file: TextIO, SLE:bool):
     A = np.ndarray((n, n))
     if SLE:
         b = np.ndarray(n)
-        #if check(n):
-        #    raise ValueError("Не правильно введена матрица")
-    else:
-        pass
+
 
 
     for i in range(n):

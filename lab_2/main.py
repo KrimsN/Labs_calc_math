@@ -4,7 +4,7 @@ import argparse
 import os
 #from pprint import pprint
 #from IO import reader, writer
-from Accurate_methods.LU_decomposition import Solve as Solve_LU, inverse as inv, determinant as det
+from Accurate_methods.LU_decomposition import Solve as Solve_LU, inverse as inv, determinant as det, PLU_decomposition as LU
 import Iterative_methods.seidel as Sei
 
 from myIO import reader, writer
@@ -23,54 +23,65 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--output', action="store", default='output.txt')
     args = parser.parse_args()
 
-    in_f = open(args.input, 'r')
-
     
-    if args.solve:
-        A, b = reader.read(in_f, SLE=True)
-        A, b = np.array(A), np.array(b)
-        print('A:\n', A, 'b:\n', b)
-    else:
-        A , b = reader.read(in_f, SLE=False)
-        A = np.array(A)
-        print('A:\n', A)
-    print('---------------------------------------')
-
-
-    if args.method == 'LU':
+    with open(args.input, 'r') as f_in:
+    
         if args.solve:
-            print('--------------Solve SLE----------------')
-            X, Y, R, NR_r, NR_e = Solve_LU(A, b)  # X - вектор решения, Y - временный вектор, R - вектор невязка, NR_r - норма вектора невязки, NR_e - евклиидова норма
-            print('\nMy\n')
-            print('x* = ', X)
-            print('y = ', Y)
-            print('r = ', R)
-            print(f'||r|| = {NR_r} or {NR_e}')
-            print('---------------------------------------')
+            A, b = reader.read(f_in, SLE=True)
+            A, b = np.array(A), np.array(b)
+            print('A:\n', A, 'b:\n', b)
+        else:
+            A , b = reader.read(f_in, SLE=False)
+            A = np.array(A)
+            print('A:\n', A)
+        print('---------------------------------------')
 
-        if args.inverse:
-            print('---------------inverse-----------------')
-            A_inv, Y_list, R = inv(A)
-            print('inverse:\n', A_inv)
-            print(f'Norm:\n{R}')
-            for i in range(len(Y_list)):
-                print(f'y{i} : {Y_list[i]}')
-            print('---------------------------------------')
-            
-        if args.determinant:
-            print('-------------determinant---------------')
-            A_det = det(A)
-            print('det_PLU: ', A_det)
-            print('---------------------------------------')
 
-    elif args.method == 'Seidel':
-        if args.solve:
-            eps = 1e-1
-            alpha, beta, NR_r = Sei.Solve(A, b, eps)
-        if args.inverse or args.determinant:
-            raise KeyError('У метода Зейделя не определены операции инвертирования и нахождение определителя.')
-    else:
-        print('EROOR')
+    with open(args.output,'w') as f_out:
+        
+        if args.method == 'LU':
+            P, L, U = LU(A)
+            writer.write(f_out, {'P':P, 'L':L, 'U':U})
+            if args.solve:
+                print('--------------Solve SLE----------------')
+                X, Y, R, NR_r, NR_e = Solve_LU(A, b)  # X - вектор решения, Y - временный вектор, R - вектор невязка, NR_r - норма вектора невязки, NR_e - евклиидова норма
+                print('\nMy\n')
+                print('x* = ', X)
+                print('y = ', Y)
+                print('r = ', R)
+                print(f'||r|| = {NR_r} or {NR_e}')
+                print('---------------------------------------')
+                writer.write(f_out, SLE={'x':X, 'y':Y, 'e':R, 'NR':NR_e})
+
+
+
+            if args.inverse:
+                print('---------------inverse-----------------')
+                A_inv, Y_list, R_inv = inv(A)
+                print('inverse:\n', A_inv)
+                print(f'Norm:\n{R_inv}')
+                for i in range(len(Y_list)):
+                    print(f'y{i} : {Y_list[i]}')
+                print('---------------------------------------')
+
+                writer.write(f_out, INV={'inv': A_inv, 'Norm':R_inv, 'Y':Y_list})
+                
+            if args.determinant:
+                print('-------------determinant---------------')
+                A_det = det(A)
+                print('det_PLU: ', A_det)
+                print('---------------------------------------')
+
+                writer.write(f_out, DET=A_det)
+
+        elif args.method == 'Seidel':
+            if args.solve:
+                eps = 1e-1
+                alpha, beta, NR_r = Sei.Solve(A, b, eps)
+            if args.inverse or args.determinant:
+                raise KeyError('У метода Зейделя не определены операции инвертирования и нахождение определителя.')
+        else:
+            print('EROOR')
 
 
 
@@ -87,6 +98,5 @@ if __name__ == "__main__":
     '''
     
 
-
-    in_f.close()
+    f_in.close()
 

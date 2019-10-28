@@ -1,2 +1,5 @@
 /.vscode
 /lab2/__pycache__
+*.pyc
+*.pyo
+*.txt
