@@ -31,6 +31,6 @@ def read(input_file: TextIO, SLE:bool):
     if SLE:
         return A, b
     else:
-        return A
+        return A , None
 
     #return task, A, b

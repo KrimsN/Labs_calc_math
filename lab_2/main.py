@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.linalg
 import argparse 
+import os
 #from pprint import pprint
 #from IO import reader, writer
 from Accurate_methods.LU_decomposition import Solve as Solve_LU, inverse as inv, determinant as det
@@ -12,7 +13,7 @@ from myIO import reader, writer
 
 
 if __name__ == "__main__":
-
+    os.system('cls')
     parser = argparse.ArgumentParser()
     parser.add_argument('method', help='метод работы с матрицей', choices=['LU', 'Seidel'])
     parser.add_argument('-s', '--solve', help='Решить СЛАУ', action="store_true")
@@ -22,24 +23,45 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--output', action="store", default='output.txt')
     args = parser.parse_args()
 
-    in_f = open(args.input, 'w')
+    in_f = open(args.input, 'r')
 
     
     if args.solve:
-        A , b = reader.read(in_f, SLE=True)
+        A, b = reader.read(in_f, SLE=True)
+        A, b = np.array(A), np.array(b)
+        print('A:\n', A, 'b:\n', b)
     else:
-        A = reader.read(in_f, SLE=False)
-    
+        A , b = reader.read(in_f, SLE=False)
+        A = np.array(A)
+        print('A:\n', A)
+    print('---------------------------------------')
+
 
     if args.method == 'LU':
         if args.solve:
-            X, Y, R, NR_r, NR_e = Solve_LU(A, b)
+            print('--------------Solve SLE----------------')
+            X, Y, R, NR_r, NR_e = Solve_LU(A, b)  # X - вектор решения, Y - временный вектор, R - вектор невязка, NR_r - норма вектора невязки, NR_e - евклиидова норма
+            print('\nMy\n')
+            print('x* = ', X)
+            print('y = ', Y)
+            print('r = ', R)
+            print(f'||r|| = {NR_r} or {NR_e}')
+            print('---------------------------------------')
+
         if args.inverse:
-            A_inv = inv(A)
+            print('---------------inverse-----------------')
+            A_inv, Y_list, R = inv(A)
+            print('inverse:\n', A_inv)
+            print(f'Norm:\n{R}')
+            for i in range(len(Y_list)):
+                print(f'y{i} : {Y_list[i]}')
+            print('---------------------------------------')
+            
         if args.determinant:
+            print('-------------determinant---------------')
             A_det = det(A)
-
-
+            print('det_PLU: ', A_det)
+            print('---------------------------------------')
 
     elif args.method == 'Seidel':
         if args.solve:
@@ -53,7 +75,7 @@ if __name__ == "__main__":
 
 
 
-
+    '''
     myA = [[20.9, 1.2, 2.1, 0.9], [1.2, 21.2, 1.5, 2.5],[2.1, 1.5, 19.8, 1.3], [0.9, 2.5, 1.3, 32.1]]
     myB = [21.7, 27.46, 28.76, 49.72]
     myA = [
@@ -62,38 +84,9 @@ if __name__ == "__main__":
     [ 3.0,  0.0,  3.0, -10.0],
     [-2.0,  1.0,  2.0,  -3.0]
     ]
+    '''
     
-    
-    # myB = [
-    #     2.0,
-    #     -3.0,
-    #     8.0,
-    #     5.0
-    # ]
 
-
-    b = np.array(myB)
-    A = np.array(myA)
-    Det = det(A) # нахождение определителя
-    print('\n\ndet_PLU: ', Det)
-    #print('\n\ndet: ',scipy.linalg.det(A))
-
-    print('\nMy\n')
-    X, Y, R, NR, NR_e = Solve_LU(A, b) # X - вектор решения, Y - временный вектор, R - вектор невязка, NR - норма вектора невязки
-    print('x* = ', X)
-    print('y = ', Y)
-    print('r = ', R)
-    print(f'||r|| = {NR} or {NR_e}')
-    writer.write(X, R, NR)
-
-    X , Y, NR = inv(A) # нахождение обратной матрицы и 
-    print('inverse:\n',X)
-    print(f'Norm:\n{NR}')
-
-    np.set_printoptions(precision=2, suppress=False)
-    print(type(Y))
-    for i in range(len(Y)):
-        print(f'y{i} : {Y[i]}')
 
     in_f.close()
 
