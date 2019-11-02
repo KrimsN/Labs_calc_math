@@ -3,15 +3,6 @@ from math import sqrt
 import numpy as np
 
 
-
-def vec_eps(A, x, b):
-    return A.dot(x) - b
-
-
-def mat_eps(A, X):
-    return A * X - np.identity(A.shape[0])
-
-
 def norm(M):
     ret = 0.0
     for e in np.nditer(M):
@@ -24,6 +15,7 @@ def norm(M):
 # ненулевой элемент, то можно прибавить строку с этим эл-том
 # к строке с эл-том главной диагонали, чтобы получить экви-
 # валентную систему, но с ненулевым эл-том ГД.
+
 def Solve(A: np.ndarray, b: np.ndarray, eps):
     def new_x(a, b, x):
         n = x.shape[0]

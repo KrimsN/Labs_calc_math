@@ -1,5 +1,5 @@
 /.vscode
-/lab2/__pycache__
+__pycache__
 *.pyc
 *.pyo
 *.txt
