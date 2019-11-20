@@ -24,10 +24,10 @@ def main():
         with open(args.input, 'r') as f_in:
                 
             if args.grid_type == 'un':
-                a, b, Y, test_l= reader()
+                a, b, Y, test_l, anal_func = reader(f_in, args.grid_type)
                 Poly = NewtonPolynomialE(a, b, Y)
             else: 
-                X, Y, test_l = reader()
+                X, Y, test_l, anal_func = reader(f_in, args.grid_type)
                 Poly = NewtonPolynomialN(X, Y)
 
         with open(args.output, 'w') as f_out:
