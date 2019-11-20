@@ -31,6 +31,12 @@ class Function:
         if self.fun.free_symbols - {x} != set():
             raise ValueError('Выражение содержит переменные кроме x')
 
+    def __call__(self, arg, deriv=0):
+        res = self.fun if deriv == 0 else self.fun.diff(*(x for i in range(0, deriv)))
+        return float(res.subs({x : arg}))
+
+    def diff(self):
+        return diff(self.fun, 'x')
         
     def plot(self, dx1, dx2):
         plot(self.fun, (x, dx1, dx2))
