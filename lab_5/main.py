@@ -1,10 +1,14 @@
 import numpy as np
 
+from math import sqrt
 import argparse 
 
 from myIO import reader, writer
 from newton import NewtonPolynomialN, NewtonPolynomialE, Function
 
+def averange(arr):
+    arr = arr or [0]
+    return sum(arr) / len(arr)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -36,14 +40,24 @@ def main():
         print(f'x_res: {test_l}')
         print(anal_func)
         
+        if anal_func:
+            anal_func = Function(anal_func)
+
+
         with open(args.output, 'w') as f_out:
             f_l = []
+            eps = []
             for t in test_l:
                 f_l.append( Poly(t, args.deriv_order) ) 
+                if anal_func:
+                    eps.append( f_l[-1] - anal_func(t, args.deriv_order) )
+            
+            aver = averange(eps)
+            sigma = sqrt( sum([(x_i - aver) ** 2 for x_i in eps]) / len(eps))
 
-
-
+            writer.write(f_out, test_l, f_l, sigma)
             print(f_l)
+            print(sigma)
 
 
 

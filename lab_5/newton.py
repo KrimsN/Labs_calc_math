@@ -37,9 +37,12 @@ class Function:
 
     def diff(self):
         return diff(self.fun, 'x')
-        
+
     def plot(self, dx1, dx2):
         plot(self.fun, (x, dx1, dx2))
+
+    def __str__(self):
+        return str(self.fun)
 
 
 
