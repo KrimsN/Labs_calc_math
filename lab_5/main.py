@@ -3,7 +3,7 @@ import numpy as np
 import argparse 
 
 from myIO import reader, writer
-from newton import NewtonPolynomialN, NewtonPolynomialE
+from newton import NewtonPolynomialN, NewtonPolynomialE, Function
 
 
 def main():
@@ -24,16 +24,25 @@ def main():
         with open(args.input, 'r') as f_in:
                 
             if args.grid_type == 'un':
-                a, b, Y, test_l, anal_func = reader(f_in, args.grid_type)
+                a, b, Y, test_l, anal_func = reader.read(f_in, args.grid_type)
                 Poly = NewtonPolynomialE(a, b, Y)
+                print(f'a={a}\t b={b}')
             else: 
-                X, Y, test_l, anal_func = reader(f_in, args.grid_type)
+                X, Y, test_l, anal_func = reader.read(f_in, args.grid_type)
                 Poly = NewtonPolynomialN(X, Y)
+                print(f'X: {X}')
 
+        print(f'Y: {Y}\n')
+        print(f'x_res: {test_l}')
+        print(anal_func)
+        
         with open(args.output, 'w') as f_out:
             f_l = []
             for t in test_l:
                 f_l.append( Poly(t, args.deriv_order) ) 
+
+
+
             print(f_l)
 
 
