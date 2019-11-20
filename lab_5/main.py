@@ -43,6 +43,7 @@ def main():
         if anal_func:
             anal_func = Function(anal_func)
 
+        print(Function(str(Poly)))
 
         with open(args.output, 'w') as f_out:
             f_l = []
