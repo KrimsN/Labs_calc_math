@@ -57,8 +57,8 @@ def main():
             sigma = sqrt( sum([(x_i - aver) ** 2 for x_i in eps]) / len(eps))
 
             writer.write(f_out, test_l, f_l, sigma)
-            print(f_l)
-            print(sigma)
+            #print(f_l)
+            #print(sigma)
 
 
 
