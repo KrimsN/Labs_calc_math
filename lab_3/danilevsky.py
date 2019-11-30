@@ -30,12 +30,38 @@ def get_danilevsky_mtx(A: np.ndarray):
     return A, B_l, B_inv_l
 
 
+def get_l_l(P):
+    coefs = np.array(P[0]) * -1
+    coefs = np.insert(coefs, 0, 1)
+    tmp =  np.roots(coefs)
+    roots = np.array([r.real for r in tmp if abs(r.imag) < 1e-4])
+    roots.sort()
+    print(roots)
+
+    ret = []
+    i = 0
+    L = len(roots)
+    while i < L:
+        ret.append({'r': roots[i], 'k': 1})
+        i += 1
+        while i < L and abs(ret[-1]['r']-roots[i]) < 1e-4:
+            i += 1
+            ret[-1]['k'] += 1
+    return ret
+
+
+
+
+
+
 
 def get_lamda_list(P, eps=1e-4):
 
     def make_poly(P):
         '''Порождает полином из первой строки м-цы Фробениуса P'''
         return Poly([-p for p in reversed(P[0])] + [1.0])
+        
+
     F = make_poly(P)
 
     roots = [r.real for r in aberth(F, eps) if abs(r.imag) < eps]

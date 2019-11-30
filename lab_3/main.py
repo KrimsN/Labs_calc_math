@@ -6,7 +6,7 @@ from sys import stdin, stdout
 from numpy.linalg import det
 from numpy import eye
 
-from danilevsky import get_danilevsky_mtx, get_lamda_list, get_S, get_frob_ver
+from danilevsky import get_danilevsky_mtx, get_lamda_list, get_S, get_frob_ver, get_l_l
 
 from myIO import reader
 from myIO.writer import write_mtx
@@ -31,6 +31,7 @@ def main():
 
         P, B_l, B_inv_l = get_danilevsky_mtx(A)
         lambda_l = get_lamda_list(P)
+        # lambda_l = get_l_l(P)
 
         S = None
 
@@ -38,7 +39,7 @@ def main():
             # Записываем в файл матрицу Фрабениуса
             f_out.write('Frobenius matrix:\n')
             write_mtx(f_out, P)
-            f_out.write('--\n')
+            f_out.write('-----\n\n')
             for lam in lambda_l:
                 f_out.write(f'lam = {lam["r"]}\n--\n')
 
