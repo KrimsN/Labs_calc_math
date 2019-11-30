@@ -128,7 +128,7 @@ class NewtonPolynomialE:
         C = [A[i][0]/factorial(i) for i in range(n)]
     
         self.RANGE, self.C, self.h = {'a': a, 'b': b}, np.asarray(C), (b-a)/(n - 1)
-        self.X = np.asarray([self.RANGE['a'] + self.h * i for i in range(n)])
+        #self.X = np.asarray([self.RANGE['a'] + self.h * i for i in range(n)])
         #self.New = NewtonPolynomialN(self.X, Y)
 
     def phi(self, q, i, *excluded):
@@ -173,4 +173,4 @@ class NewtonPolynomialE:
         return res
     
     def plot(self, X):
-        Function(str(self)).plot(X[0], X[-1])
+        Function(str(self)).plot(self.h['a'], self.h['b'])
