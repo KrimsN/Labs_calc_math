@@ -1,5 +1,6 @@
 from typing import TextIO
 from class_function import Function
+import numpy as np
 
 def read(input_file: TextIO, g):
     '''
@@ -8,24 +9,24 @@ def read(input_file: TextIO, g):
     n = int(input_file.readline())
     if g == "dyn":
         a, b = input_file.readline().split()
-        a = float(a)
-        b = float(b)
+        a, b = float(a), float(b)
         f = Function(input_file.readline())
         return n, a, b, f
+
+
     elif g == "eq":
         h = float(input_file.readline())
         Y = input_file.readline().split()
-        for i in range(Y):
-            Y[i] = float(Y[i])
+        Y = np.array(Y, dtype='float32')
         return n, h, Y
+
+
+
     elif g == "noneq":
-        h = float(input_file.readline())
         X = input_file.readline().split()
-        for i in range(X):
-            X[i] = float(X[i])
+        X = np.array(X, dtype='float32')
         Y = input_file.readline().split()
-        for i in range(Y):
-            Y[i] = float(Y[i])
+        Y = np.array(Y, dtype='float32')
         return n, X, Y
             
     

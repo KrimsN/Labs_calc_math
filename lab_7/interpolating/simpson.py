@@ -1,16 +1,17 @@
-def sum1(a,n,f,xi):
-    s = 0
-    for i in range(a,n+1):
-        s += f(xi[2*i-1])
-    return s
 
-def sum2(a,n,f,xi):
-    s = 0
-    for i in range(a,n+1):
-        s += f(xi[2*i])
-    return s
 
 def simpson_dyn(f,a,b,n = 100):
+    def sum1(a,n,f,xi):
+        s = 0
+        for i in range(a,n+1):
+            s += f(xi[2*i-1])
+        return s
+
+    def sum2(a,n,f,xi):
+        s = 0
+        for i in range(a,n+1):
+            s += f(xi[2*i])
+        return s
     """ 
 	Вычисляет приближенное значение интеграла с помощью формулы Симпсона
 	f - подынтегральная функция
@@ -19,6 +20,7 @@ def simpson_dyn(f,a,b,n = 100):
 	"""
     if n % 2 != 0:
         raise ValueError('Simpson: n is odd')
+    
     h = (b - a) / (2 * n)
     xi = []
 
@@ -39,3 +41,12 @@ def simpson_noneq(Y, H, n):
     if n % 2 != 0:
         raise ValueError('Simpson: n is odd')
     return sum(single(Y, H, i) for i in range(int(n/2)))
+
+
+def simpson_eq(Y, h, n):
+    if n % 2 != 0:
+        raise ValueError('Simpson: n is odd')
+    odds = sum(Y[2*i+1] for i in range(int(n/2)))
+    evens = sum(Y[2*i] for i in range(1, int(n/2)))
+    y = Y[0] + Y[n] + 4 * odds + 2 * evens
+    return (1/3) * h * y

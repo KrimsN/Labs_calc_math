@@ -40,3 +40,11 @@ def left_rect_noneq(Y, H, n):
 
 def right_rect_noneq(Y, H, n):
     return sum(Y[i+1] * H[i] for i in range(n))
+
+
+def left_rect_eq(Y, h, n):
+    return h * sum(Y[i] for i in range(n))
+
+
+def right_rect_eq(Y, h, n):
+    return h * sum(Y[i] for i in range(1, n+1))

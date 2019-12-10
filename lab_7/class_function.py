@@ -37,6 +37,9 @@ class Function:
     
 
     
+    def __str__(self):
+        return self.fun
+        
     def plot_x(self, dx, rng=5):
         plot(self.fun, (x, dx-rng, dx+rng))
         

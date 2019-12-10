@@ -4,9 +4,9 @@ import argparse
 
 from class_function import Function
 
-from interpolating.rectangle_rule import left_rect, right_rect
-from interpolating.trapezoidal import trapezoidal
-from interpolating.simpson import simpson
+from interpolating.rectangle_rule import *
+from interpolating.trapezoidal import *
+from interpolating.simpson import *
 
 from myIO import reader, writer
 
@@ -29,8 +29,62 @@ def main():
     args = parser.parse_args()
     try:
         
+        with open(args.input) as f_in:
+            if args.grid_type == 'dyn':
+                n, a, b, func = reader.read(f_in, args.grid_type)
+                print(f'dyn:\n n: {n}\t(a, b): ({a}, {b})\t f: {func}\n')
+            elif args.grid_type == 'eq':
+                n, h, Y = reader.read(f_in, args.grid_type)
+                print(f'eq:\n n: {n}\th: {h}\t\n Y: {Y}\n')
+            elif args.grid_type == 'noneq':
+                n, X, Y = reader.read(f_in, args.grid_type)
+                print(f'eq:\n n: {n}\t\nX: {X}\t\n Y: {Y}\n')
+
+
+
         if args.grid_type == 'dyn':
-            reader.read()
+            if args.left_rect:
+                left_res = left_rect_dyn(func, a, b, n)
+            if args.right_rect:
+                right_res = right_rect_dyn(func, a, b, n)
+            if args.trapezoidal:
+                trap_res = trapezoidal_dyn(func, a, b, n)
+            if args.simpson:
+                simp_res = simpson_dyn(func, a, b, n)
+
+        elif args.grid_type == 'eq':
+            if args.left_rect:
+                left_res = left_rect_eq(Y, h, n)
+            if args.right_rect:
+                right_res = right_rect_eq(Y, h, n)
+            if args.trapezoidal:
+                trap_res = trapezoidal_eq(Y, h, n)
+            if args.simpson:
+                simp_res = simpson_eq(Y, h, n)
+
+        elif args.grid_type == 'noneq':
+            if args.left_rect:
+                left_res = left_rect_noneq(Y, X, n)
+            if args.right_rect:
+                right_res = right_rect_noneq(Y, X, n)
+            if args.trapezoidal:
+                trap_res = trapezoidal_noneq(Y, X, n)
+            if args.simpson:
+                simp_res = simpson_noneq(Y, X, n)
+
+        print(f'left: {left_res}')
+        print(f'right: {right_res}')
+        # print(f'delta: {(left_res + right_res)/2}')
+        print(f'trap: {trap_res}')
+        print(f'simp: {simp_res}')
+
+    finally:
+        pass
+        
+
+                
+        
+        
 
 
 
