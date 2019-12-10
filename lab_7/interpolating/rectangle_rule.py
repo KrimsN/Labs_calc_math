@@ -1,14 +1,34 @@
 
-def left_rect(f, a, b, step):
+def left_rect(f, a, b, n = 100):
+    """ 
+	Вычисляет приближенное значение интеграла методом левостороннеего прямоугольника
+    f - подынтегральная функция
+	a, b - пределы интегрирования
+	n - количество частичных отрезков
+	"""
+    h = float(b-a)/n
     res = 0
-    for x in range(a, b, step):
-        res += f(x) * step
+    x = a
+    
+    for i in range(n):
+        res += f(x) * h
+        x += h
     return res
 
 
 
-def right_rect(f, a, b, step):
+def right_rect(f, a, b, n = 100):
+    """ 
+	Вычисляет приближенное значение интеграла методом правостороннеего прямоугольника
+    f - подынтегральная функция
+	a, b - пределы интегрирования
+	n - количество частичных отрезков
+	"""
+    h = float(b-a)/n
     res = 0
-    for x in range(b, a, -step):
-        res += f(x) * step
+    x = b
+    
+    for i in range(n):
+        res += f(x) * h
+        x -= h
     return res
