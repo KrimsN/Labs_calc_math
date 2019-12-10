@@ -26,6 +26,8 @@ def get_danilevsky_mtx(A: np.ndarray):
         '''(https://vk.com/doc124637547_526415634?hash=f026d3ff2da7aba437&dl=6d88e7007fab8ac6ef стр 4)'''
         A_til = A.dot(B_l[i])
         A = B_inv_l[i].dot(A_til)
+        print('here')
+        print(f'\n\n[{i}]\nP:\n{A}\nM:\n{B_l[i]}\nM-1:\n{B_inv_l[i]}')
 
     return A, B_l, B_inv_l
 
@@ -33,10 +35,14 @@ def get_danilevsky_mtx(A: np.ndarray):
 def get_l_l(P):
     coefs = np.array(P[0]) * -1
     coefs = np.insert(coefs, 0, 1)
+    if P.shape[0] % 2 == 1:
+        coefs *= -1
     tmp =  np.roots(coefs)
-    roots = np.array([r.real for r in tmp if abs(r.imag) < 1e-4])
+    #print(f'coeffs: {coefs}')
+    #print(f'np root : {tmp}')
+    roots = np.array([r.real for r in tmp if abs(r.imag) < 1e-1])
     roots.sort()
-    print(roots)
+    #print(roots)
 
     ret = []
     i = 0
@@ -44,7 +50,7 @@ def get_l_l(P):
     while i < L:
         ret.append({'r': roots[i], 'k': 1})
         i += 1
-        while i < L and abs(ret[-1]['r']-roots[i]) < 1e-4:
+        while i < L and abs(ret[-1]['r']-roots[i]) < 1e-1:
             i += 1
             ret[-1]['k'] += 1
     return ret

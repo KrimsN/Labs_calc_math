@@ -26,12 +26,16 @@ def main():
         with open(args.input, 'r') as f_in:
             A = reader.read(f_in)
             n = A.shape[0]
-
-        eps = 1e-5
+        
+        #A =  np.array([[-0.79, 8.5058, -0.348802, -21.1986, 15.4345], [1,0,0,0,0], [0,1,0,0,0], [0,0,1,0,0], [0,0,0,1,0]])
+        #n = A.shape[0]
+        # eps = 1e-5
 
         P, B_l, B_inv_l = get_danilevsky_mtx(A)
-        lambda_l = get_lamda_list(P)
-        # lambda_l = get_l_l(P)
+
+        # P = np.array([[-0.79, 8.5058, -0.348802, -21.1986, 15.4345], [1,0,0,0,0], [0,1,0,0,0], [0,0,1,0,0], [0,0,0,1,0]])
+        # lambda_l = get_lamda_list(P)
+        lambda_l = get_l_l(P)
 
         S = None
 
@@ -40,15 +44,17 @@ def main():
             f_out.write('Frobenius matrix:\n')
             write_mtx(f_out, P)
             f_out.write('-----\n\n')
+
             for lam in lambda_l:
                 f_out.write(f'lam = {lam["r"]}\n--\n')
 
                 if args.task_type == 1:
-                    d = det(A - eye(n).dot(l['r']))
-                    f_out.write(f'det(A-lam * E)={d}\n--\n')
+                    d = det(A - eye(n).dot(lam['r']))
+                    f_out.write(f'det(A-lam * E)={d}\n')
                 
                 elif args.task_type == 2:
                     S = get_S(B_l) if S is None else S
+                    print(S)
                     y = get_frob_ver(lam['r'], n)
                     x = S.dot(y)
                     f_out.write('x:\n')
