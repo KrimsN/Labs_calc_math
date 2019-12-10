@@ -1,9 +1,13 @@
 
 import numpy as np
+import argparse
+
 from class_function import Function
+
 from interpolating.rectangle_rule import left_rect, right_rect
 from interpolating.trapezoidal import trapezoidal
 from interpolating.simpson import simpson
+
 from myIO import reader, writer
 
 
@@ -14,23 +18,19 @@ from scipy.integrate import quad
 #
 
 def main():
-    a = 1
-    b = 2
-    f_str = 'x^2'
-    func = Function(f_str)
-
-    res = left_rect(func, a, b)
-    print('left: ', res)
-    res = right_rect(func, a, b)
-    print('right: ', res)
-    res = trapezoidal(func, a, b)
-    print('trap: ', res)
-
-    res = simpson(func, a, b, 5)
-    print('sim: ', res)
-
-    res, _ = quad(func, a, b)
-    print('test: ', res)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-g', '--grid_type', action="store", default='dyn', choices=['dyn', 'eq', 'noneq'], help="Тип сетки: dyn - динамическая; eq - равномерная; noneq - неравномерная.")
+    parser.add_argument('-l', '--left_rect', action="store_true", help="Найти методом левых прямоугольников")
+    parser.add_argument('-r', '--right_rect', action="store_true", help="Найти методом правых прямоугольников")
+    parser.add_argument('-t', '--trapezoidal', action="store_true", help="Найти методом трапеций")
+    parser.add_argument('-s', '--simpson', action="store_true", help="Найти методом Симпсона")
+    parser.add_argument('-in', '--input', action="store", default='input.txt')
+    parser.add_argument('-o', '--output', action="store", default='output.txt')
+    args = parser.parse_args()
+    try:
+        
+        if args.grid_type == 'dyn':
+            reader.read()
 
 
 

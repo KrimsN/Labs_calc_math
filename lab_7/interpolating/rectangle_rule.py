@@ -1,5 +1,5 @@
 
-def left_rect(f, a, b, n = 100):
+def left_rect_dyn(f, a, b, n = 100):
     """ 
 	Вычисляет приближенное значение интеграла методом левостороннеего прямоугольника
     f - подынтегральная функция
@@ -17,7 +17,7 @@ def left_rect(f, a, b, n = 100):
 
 
 
-def right_rect(f, a, b, n = 100):
+def right_rect_dyn(f, a, b, n = 100):
     """ 
 	Вычисляет приближенное значение интеграла методом правостороннеего прямоугольника
     f - подынтегральная функция
@@ -32,3 +32,11 @@ def right_rect(f, a, b, n = 100):
         res += f(x) * h
         x -= h
     return res
+
+
+def left_rect_noneq(Y, H, n):
+    return sum(Y[i] * H[i] for i in range(n))
+
+
+def right_rect_noneq(Y, H, n):
+    return sum(Y[i+1] * H[i] for i in range(n))
