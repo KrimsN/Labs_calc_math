@@ -3,7 +3,7 @@ import numpy as np
 from class_function import Function
 from interpolating.rectangle_rule import left_rect, right_rect
 from interpolating.trapezoidal import trapezoidal
-from interpolating.simpson import simpson_method
+from interpolating.simpson import simpson
 from myIO import reader, writer
 
 
@@ -26,7 +26,8 @@ def main():
     res = trapezoidal(func, a, b)
     print('trap: ', res)
 
-    simpson_method(func, a, b, 0.02)
+    res = simpson(func, a, b, 5)
+    print('sim: ', res)
 
     res, _ = quad(func, a, b)
     print('test: ', res)
